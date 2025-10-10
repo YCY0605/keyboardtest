@@ -1,22 +1,41 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
-    <script src="./jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        #keyboard {
+        .keyboard {
             background-color: rgb(160, 220, 152);
-            width: 1000px;
             height: 335px;
             border-radius: 10px;
         }
+
         .line {
             position: absolute;
             height: 50px;
-            width: 980px;
-            background-color: rgb(142, 251, 191);
+            width: 694px;
+            border-radius: 5px;
+            background-color: transparent;
         }
+
+        .FN {
+            position: absolute;
+            height: 50px;
+            width: 140px;
+            border-radius: 5px;
+            background-color: transparent;
+        }
+
+        .NUM {
+            position: absolute;
+            height: 50px;
+            width: 185px;
+            border-radius: 5px;
+            background-color: transparent;
+        }
+
         .keys {
             width: 40px;
             height: 40px;
@@ -27,50 +46,206 @@
             display: inline-block;
             /* border: 1px solid green; */
         }
-
     </style>
     <title>Document</title>
 </head>
+
 <body>
-    <div></div>
-    <div id="keyboard" style="position: absolute;">
-        <div id="ESCF12" class="line" style="position: absolute;top: 5px; left: 5px;">
-            <div id="exc" class="keys" style="left: 5px;">Esc</div>
-            <div id="f1" class="keys" style="left: 50px;">F1</div>
-            <div id="f2" class="keys" style="left: 95px;">F2</div>
-            <div id="f3" class="keys" style="left: 140px;">F3</div>
-            <div id="f4" class="keys" style="left: 185px;">F4</div>
-            <div id="f5" class="keys" style="left: 230px;">F5</div>
-            <div id="f6" class="keys" style="left: 275px;">F6</div>
-            <div id="f7" class="keys" style="left: 320px;">F7</div>
-            <div id="f8" class="keys" style="left: 365px;">F8</div>
-            <div id="f9" class="keys" style="left: 410px;">F9</div>
-            <div id="f10" class="keys" style="left: 455px;">F10</div>
-            <div id="f11" class="keys" style="left: 500px;">F11</div>
-            <div id="f12" class="keys" style="left: 545px;">F12</div>
+    <div style="position: relative;"></div>
+    <div>
+        <!-- 鍵盤左 -->
+        <div id="keyboardL" class="keyboard" style="position: absolute; width: 704px;">
+            <!-- 第一排 -->
+            <div id="ESCF12" class="line" style="position: absolute;top: 5px; left: 5px;">
+                <div id="Escape" class="keys" style="left: 5px;">Esc</div>
+                <div id="F1" class="keys" style="left: 50px;">F1</div>
+                <div id="F2" class="keys" style="left: 95px;">F2</div>
+                <div id="F3" class="keys" style="left: 140px;">F3</div>
+                <div id="F4" class="keys" style="left: 185px;">F4</div>
+                <div id="F5" class="keys" style="left: 230px;">F5</div>
+                <div id="F6" class="keys" style="left: 275px;">F6</div>
+                <div id="F7" class="keys" style="left: 320px;">F7</div>
+                <div id="F8" class="keys" style="left: 365px;">F8</div>
+                <div id="F9" class="keys" style="left: 410px;">F9</div>
+                <div id="F10" class="keys" style="left: 455px;">F10</div>
+                <div id="F11" class="keys" style="left: 500px;">F11</div>
+                <div id="F12" class="keys" style="left: 545px;">F12</div>
+            </div>
+            <!-- 第二排 -->
+            <div id="backspaceRow" class="line" style="position: absolute;top: 60px; left: 5px;">
+                <div id="Backquote" class="keys" style="left: 5px; width: 60px;">`</div>
+                <div id="Digit1" class="keys" style="left: 70px;">1</div>
+                <div id="Digit2" class="keys" style="left: 115px;">2</div>
+                <div id="Digit3" class="keys" style="left: 160px;">3</div>
+                <div id="Digit4" class="keys" style="left: 205px;">4</div>
+                <div id="Digit5" class="keys" style="left: 250px;">5</div>
+                <div id="Digit6" class="keys" style="left: 295px;">6</div>
+                <div id="Digit7" class="keys" style="left: 340px;">7</div>
+                <div id="Digit8" class="keys" style="left: 385px;">8</div>
+                <div id="Digit9" class="keys" style="left: 430px;">9</div>
+                <div id="Digit0" class="keys" style="left: 475px;">0</div>
+                <div id="Minus" class="keys" style="left: 520px;">-</div>
+                <div id="Equal" class="keys" style="left: 565px;">=</div>
+                <div id="Backspace" class="keys" style="left: 610px; width: 79px;">backspace</div>
+            </div>
+            <!-- 第三排 -->
+            <div id="tabRow" class="line" style="position: absolute;top: 115px; left: 5px;">
+                <div id="Tab" class="keys" style="left: 5px; width: 65px;">Tab</div>
+                <div id="KeyQ" class="keys" style="left: 75px;">Q</div>
+                <div id="KeyW" class="keys" style="left: 120px;">W</div>
+                <div id="KeyE" class="keys" style="left: 165px;">E</div>
+                <div id="KeyR" class="keys" style="left: 210px;">R</div>
+                <div id="KeyT" class="keys" style="left: 255px;">T</div>
+                <div id="KeyY" class="keys" style="left: 300px;">Y</div>
+                <div id="KeyU" class="keys" style="left: 345px;">U</div>
+                <div id="KeyI" class="keys" style="left: 390px;">I</div>
+                <div id="KeyO" class="keys" style="left: 435px;">O</div>
+                <div id="KeyP" class="keys" style="left: 480px;">P</div>
+                <div id="BracketLeft" class="keys" style="left: 525px;">[</div>
+                <div id="BracketRight" class="keys" style="left: 570px;">]</div>
+                <div id="Backslash" class="keys" style="left: 615px; width: 74px;">\</div>
+            </div>
+            <!-- 第四排 -->
+            <div id="capslockRow" class="line" style="position: absolute;top: 170px; left: 5px;">
+                <div id="CapsLock" class="keys" style="left: 5px; width: 80px;">Capslock</div>
+                <div id="KeyA" class="keys" style="left: 90px;">A</div>
+                <div id="KeyS" class="keys" style="left: 135px;">S</div>
+                <div id="KeyD" class="keys" style="left: 180px;">D</div>
+                <div id="KeyF" class="keys" style="left: 225px;">F</div>
+                <div id="KeyG" class="keys" style="left: 270px;">G</div>
+                <div id="KeyH" class="keys" style="left: 315px;">H</div>
+                <div id="KeyJ" class="keys" style="left: 360px;">J</div>
+                <div id="KeyK" class="keys" style="left: 405px;">K</div>
+                <div id="KeyL" class="keys" style="left: 450px;">L</div>
+                <div id="Semicolon" class="keys" style="left: 495px;">;</div>
+                <div id="Quote" class="keys" style="left: 540px;">'</div>
+                <div id="Enter" class="keys" style="left: 585px; width: 104px;">Enter</div>
+            </div>
+            <!-- 第五排 -->
+            <div id="shiftRow" class="line" style="position: absolute;top: 225px; left: 5px;">
+                <div id="ShiftLeft" class="keys" style="left: 5px; width: 100px;">Shift</div>
+                <div id="KeyZ" class="keys" style="left: 110px;">Z</div>
+                <div id="KeyX" class="keys" style="left: 155px;">X</div>
+                <div id="KeyC" class="keys" style="left: 200px;">C</div>
+                <div id="KeyV" class="keys" style="left: 245px;">V</div>
+                <div id="KeyB" class="keys" style="left: 290px;">B</div>
+                <div id="KeyN" class="keys" style="left: 335px;">N</div>
+                <div id="KeyM" class="keys" style="left: 380px;">M</div>
+                <div id="Comma" class="keys" style="left: 425px;">,</div>
+                <div id="Period" class="keys" style="left: 470px;">.</div>
+                <div id="Slash" class="keys" style="left: 515px;">/</div>
+                <div id="ShiftRight" class="keys" style="left: 560px; width: 129px;">Shift</div>
+                <!-- 第六排 -->
+            </div>
+            <div id="ctrl" class="line" style="position: absolute;top: 280px; left: 5px;">
+                <div id="ControlLeft" class="keys" style="left: 5px; width: 58px;">Ctrl</div>
+                <div id="MetaLeft" class="keys" style="left: 68px; width: 57px;">Win</div>
+                <div id="AltLeft" class="keys" style="left: 130px; width: 57px;">Alt</div>
+                <div id="Space" class="keys" style="left: 192px; width: 248px">Space</div>
+                <div id="AltRight" class="keys" style="left: 445px; width: 57px;">Alt</div>
+                <div id="MetaRight" class="keys" style="left: 507px; width: 57px;">Win</div>
+                <div id="ContextMenu" class="keys" style="left: 569px; width: 57px;">Menu</div>
+                <div id="ControlRight" class="keys" style="left: 631px; width: 58px;">Ctrl</div>
+            </div>
+
         </div>
-        <div id="backspace" class="line" style="position: absolute;top: 60px; left: 5px;">
-            <div id="exc" class="keys" style="left: 5px;"></div>
-            <div id="f1" class="keys" style="left: 50px;"></div>
+        <!-- 鍵盤中 -->
+        <div id="keyboardM" class="keyboard" style="position: absolute; width: 150px; left: 720px;">
+            <div id="FN1" class="FN" style="position: absolute;top: 5px; left: 5px;">
+                <div id="PrintScreen" class="keys" style="left: 5px;">PRT<br>SCN</div>
+                <div id="ScrollLock" class="keys" style="left: 50px;">SCRL<br>LOCK</div>
+                <div id="Pause" class="keys" style="left: 95px;">PAUSE</div>
+            </div>
+            <div id="FN2" class="FN" style="position: absolute;top: 60px; left: 5px;">
+                <div id="Insert" class="keys" style="left: 5px;">INS</div>
+                <div id="Home" class="keys" style="left: 50px;">HOME</div>
+                <div id="PageUp" class="keys" style="left: 95px;">PGUP</div>
+            </div>
+            <div id="FN3" class="FN" style="position: absolute;top: 115px; left: 5px;">
+                <div id="Delete" class="keys" style="left: 5px;">DEL</div>
+                <div id="End" class="keys" style="left: 50px;">END</div>
+                <div id="PageDown" class="keys" style="left: 95px;">PGDN</div>
+            </div>
+            <!-- 透明 -->
+            <div class="FN" style="position: absolute;top: 170px; left: 5px; background-color: transparent;"></div>
+            <div id="FN3" class="FN" style="position: absolute;top: 225px; left: 5px;">
+                <div class="keys" style="left: 5px;  background-color: transparent;"></div>
+                <div id="ArrowUp" class="keys" style="left: 50px;">UP</div>
+                <div class="keys" style="left: 95px;  background-color: transparent;"></div>
+            </div>
+            <div id="FN3" class="FN" style="position: absolute;top: 280px; left: 5px;">
+                <div id="ArrowLeft" class="keys" style="left: 5px;">LEFT</div>
+                <div id="ArrowDown" class="keys" style="left: 50px;">DOWN</div>
+                <div id="ArrowRight" class="keys" style="left: 95px;">RIGHT</div>
+            </div>
         </div>
-        <div id="tab" class="line" style="position: absolute;top: 115px; left: 5px;">
-            <div id="exc" class="keys" style="left: 5px;"></div>
-            <div id="f1" class="keys" style="left: 50px;"></div>
+        <!-- 鍵盤右 -->
+        <div id="keyboardM" class="keyboard" style="position: absolute; width: 195px; left: 875px;">
+            <!-- 透明 -->
+            <div class="FN" style="position: absolute;top: 5px; left: 5px; background-color: transparent;"></div>
+            <div id="NUM1" class="NUM" style="position: absolute;top: 60px; left: 5px;">
+                <div id="NumLock" class="keys" style="left: 5px;">NUMLOCK</div>
+                <div id="NumpadDivide" class="keys" style="left: 50px;">/</div>
+                <div id="NumpadMultiply" class="keys" style="left: 95px;">*</div>
+                <div id="NumpadSubtract" class="keys" style="left: 140px;">-</div>
+            </div>
+            <div id="NUM2" class="NUM" style="position: absolute;top: 115px; left: 5px;">
+                <div id="Numpad7" class="keys" style="left: 5px;">7</div>
+                <div id="Numpad8" class="keys" style="left: 50px;">8</div>
+                <div id="Numpad9" class="keys" style="left: 95px;">9</div>
+                <div id="NumpadAdd" class="keys" style="left: 140px; height: 95px;">+</div>
+            </div>
+            <div id="NUM3" class="NUM" style="position: absolute;top: 170px; left: 5px;">
+                <div id="Numpad4" class="keys" style="left: 5px;">4</div>
+                <div id="Numpad5" class="keys" style="left: 50px;">5</div>
+                <div id="Numpad6" class="keys" style="left: 95px;">6</div>
+            </div>
+            <div id="NUM4" class="NUM" style="position: absolute;top: 225px; left: 5px;">
+                <div id="Numpad1" class="keys" style="left: 5px;">1</div>
+                <div id="Numpad2" class="keys" style="left: 50px;">2</div>
+                <div id="Numpad3" class="keys" style="left: 95px;">3</div>
+                <div id="NumpadEnter" class="keys" style="left: 140px; height: 95px;">ENTER</div>
+            </div>
+            <div id="NUM4" class="NUM" style="position: absolute;top: 280px; left: 5px;">
+                <div id="Numpad0" class="keys" style="left: 5px; width: 85px;">LEFT</div>
+                <div id="NumpadDecimal" class="keys" style="left: 95px;">.</div>
+            </div>
         </div>
-        <div id="capslock" class="line" style="position: absolute;top: 170px; left: 5px;">
-            <div id="exc" class="keys" style="left: 5px;"></div>
-            <div id="f1" class="keys" style="left: 50px;"></div>
-        </div>
-        <div id="shift" class="line" style="position: absolute;top: 225px; left: 5px;">
-            <div id="exc" class="keys" style="left: 5px;"></div>
-            <div id="f1" class="keys" style="left: 50px;"></div>
-        </div>
-        <div id="ctrl" class="line" style="position: absolute;top: 280px; left: 5px;">
-            <div id="exc" class="keys" style="left: 5px;"></div>
-            <div id="f1" class="keys" style="left: 50px;"></div>
-        </div>
-        
     </div>
-    
+
+    <div id="test"
+        style="display: flex; align-items: center; position: relative; width: 1000px; height: 50px; background-color: rgb(225, 225, 225); top: 450px; left: 10px;">
+    </div>
+
+
+    <script>
+        let key;
+        addEventListener("keydown", function (e) {
+            e.preventDefault();
+            key = e.code;
+            $('#' + key).css('background-color', 'rgb(251, 2, 1)');
+        })
+        addEventListener("keyup", function (e) {
+            e.preventDefault();
+            key = e.code;
+            if (e.code == "ShiftLeft" || (e.key == "Shift" && e.location == 1)) {
+                key = "ShiftLeft";
+            } else if (e.code == "ShiftRight" || (e.key == "Shift" && (e.location == 0 || e.location == 2))) {
+                key = "ShiftRight";
+            }
+            console.log(key);
+            $('#' + key).css('background-color', 'rgb(251, 255, 1)');
+            $('#test').prepend('><div style=" display: inline-block; width: 40px; height: 40px; background-color: rgb(251, 255, 210); border-radius: 5px;">' + key + '</div>')
+            key = null;
+        });
+        addEventListener('blur', function () {
+            console.log('xxxx');
+            $('#' + key).css('background-color', 'rgb(251, 255, 1)');
+            $('#test').prepend('><div style=" display: inline-block; width: 40px; height: 40px; background-color: rgb(251, 255, 210); border-radius: 5px;">' + key + '</div>')
+            key = null;
+        })
+
+    </script>
 </body>
+
 </html>
