@@ -4,8 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        @font-face {
+            font-family: 'cwTeXYen';
+            font-style: normal;
+            font-weight: 500;
+            src: url(//fonts.gstatic.com/ea/cwtexyen/v3/cwTeXYen-zhonly.eot);
+            src: url(//fonts.gstatic.com/ea/cwtexyen/v3/cwTeXYen-zhonly.eot?#iefix) format('embedded-opentype'),
+                url(//fonts.gstatic.com/ea/cwtexyen/v3/cwTeXYen-zhonly.woff2) format('woff2'),
+                url(//fonts.gstatic.com/ea/cwtexyen/v3/cwTeXYen-zhonly.woff) format('woff'),
+                url(//fonts.gstatic.com/ea/cwtexyen/v3/cwTeXYen-zhonly.ttf) format('truetype');
+        }
+
         .keyboard {
             background-color: rgb(160, 220, 152);
             height: 335px;
@@ -46,14 +59,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            /* text-align: center; */
             border: 1px solid green;
+            font-family: 'Arial';
         }
 
         .btn {
             width: 80px;
             height: 40px;
-            background-color: rgb(248, 239, 79);
+            background-color: rgb(111, 223, 221);
             border-radius: 5px;
             cursor: pointer;
             box-shadow: 0 3px #999;
@@ -69,14 +82,16 @@
 
 <body>
     <!-- 標題 -->
-    <div style="position: relative;background-color: rgb(215, 232, 196);"><br><br><br></div>
-
-    <br>
+    <div  style="position: relative; height: 80px; background-color: rgb(215, 232, 196);font-size: 50px; font-family: 'cwTeXYen';text-align: center; line-height: 80px;">
+        鍵&nbsp;盤&nbsp;測&nbsp;試
+    </div>
 
     <!-- 鍵盤 -->
-    <div>
+    <!-- <div> -->
+    <div style="position: fixed; left: 50%; transform: translateX(-50%); width: 1040px; height: 335px; top : 130px">
         <!-- 鍵盤左 -->
-        <div id="keyboardL" class="keyboard" style="position: absolute; width: 690px; border-radius: 10px 0 0 10px;">
+        <div id="keyboardL" class="keyboard"
+            style="position: absolute; width: 690px; left: 5px; border-radius: 10px 0 0 10px;">
             <!-- 第一排 -->
             <div id="ESCF12" class="line" style="position: absolute;top: 5px; left: 5px;">
                 <div id="Escape" class="keys" style="left: 5px;">Esc</div>
@@ -229,7 +244,7 @@
                 <div id="Numpad1" class="keys" style="left: 5px;">1</div>
                 <div id="Numpad2" class="keys" style="left: 50px;">2</div>
                 <div id="Numpad3" class="keys" style="left: 95px;">3</div>
-                <div id="NumpadEnter" class="keys" style="left: 140px; height: 95px; font-size: 12px;">ENTER</div>
+                <div id="NumpadEnter" class="keys" style="left: 140px; height: 95px;">Enter</div>
             </div>
             <div id="NUM4" class="NUM" style="position: absolute;top: 280px; left: 5px;">
                 <div id="Numpad0" class="keys" style="left: 5px; width: 85px;">0</div>
@@ -237,21 +252,21 @@
             </div>
         </div>
     </div>
+    <!-- </div> -->
 
     <br><br><br>
 
 
     <!-- 按鍵紀錄 -->
     <div
-        style="display: flex; align-items: center; position: relative; width: 965px; height: 70px; background-color: rgb(225, 225, 225);border: 1px solid rgb(159, 159, 159); border-radius: 5px; top: 350px; left: 10px;">
+        style="display: flex ; align-items: center; position: fixed; left: 50%; transform: translateX(-50%); width: 1030px; height: 70px; background-color: rgb(225, 225, 225);border: 1px solid rgb(159, 159, 159); border-radius: 5px; top: 500px;">
         <!-- 重置按鈕 -->
-        <div>
-            &nbsp;
-            <button id="re" class="btn">重置</button>
+        <div style="position: fixed; left: 3%;">
+            <button id="re" class="btn" ;>重置</button>
         </div>
 
-        <div>&nbsp&nbsp&nbsp按鍵紀錄：</div>
-        <div id="record" style="display: flex; align-items: center; height: 100%;"></div>
+        <div style="position: fixed; left: 12%;">&nbsp&nbsp&nbsp按鍵紀錄：</div>
+        <div id="record" style="position: fixed; left:22%; display: flex; align-items: center; height: 100%;"></div>
 
     </div>
 
@@ -263,8 +278,25 @@
         let count = 0;
         let addkeycount = 0;
         function addkey() {
-            $('#record').prepend('<div style="display: inline-flex; align-items: center; justify-content: center; margin: 5px; width: 40px; height: 40px; background-color: rgb(251, 255, 210); border: 1px solid gray; border-radius: 5px; font-size:' + $('#' + key).css('font-size') + ';">' + $('#' + key).html() + '</div>')
-            addkeycount++;
+            if (key == 'Backspace' || key == 'Space' || key == 'CapsLock') {
+                switch (key) {
+                    case "Backspace":
+                        $('#record').prepend('<div style="font-family: Arial;display: inline-flex; align-items: center; justify-content: center; margin: 5px; width: 40px; height: 40px; background-color: rgb(251, 255, 210); border: 1px solid gray; border-radius: 5px; font-size:12px;">Back<br>space</div>')
+                        break;
+                    case "Space":
+                        $('#record').prepend('<div style="font-family: Arial;display: inline-flex; align-items: center; justify-content: center; margin: 5px; width: 40px; height: 40px; background-color: rgb(251, 255, 210); border: 1px solid gray; border-radius: 5px; font-size:12px;">space</div>')
+                        break;
+                    case "CapsLock":
+                        $('#record').prepend('<div style="font-family: Arial;display: inline-flex; align-items: center; justify-content: center; margin: 5px; width: 40px; height: 40px; background-color: rgb(251, 255, 210); border: 1px solid gray; border-radius: 5px; font-size:12px;">Caps<br>Lock</div>')
+                        break;
+                }
+                addkeycount++;
+            }
+            else {
+                console.log(key);
+                $('#record').prepend('<div style="font-family: Arial;display: inline-flex; align-items: center; justify-content: center; margin: 5px; width: 40px; height: 40px; background-color: rgb(251, 255, 210); border: 1px solid gray; border-radius: 5px; font-size:' + $('#' + key).css('font-size') + ';">' + $('#' + key).html() + '</div>')
+                addkeycount++;
+            }
             if (addkeycount >= 16) {
                 $('#record div:last').remove();
                 addkeycount--;
