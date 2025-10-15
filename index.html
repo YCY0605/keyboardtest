@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
@@ -36,11 +36,12 @@
             position: absolute;
             width: 120px;
             height: 40px;
-            background-color: #d7d7d7;
+            background-color: #a9a9ff;
             top: 100px;
             left: 0px;
             transition-duration: 0.3s;
             clip-path: polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%);
+            z-index: 9001;
         }
 
         .leftdiv2 {
@@ -54,25 +55,27 @@
             display: none;
             border: solid rgb(150, 150, 150);
             border-width: 0 1px 1px 1px;
+            z-index: 9000;
         }
 
-        .nkrobtn {
+        .nkroopen {
             position: relative;
             left: 55px;
             bottom: -15px;
             width: 100px;
             height: 30px;
             cursor: pointer;
-            background-color: #d7d7d7;
+            background-color: #c7c7ff;
             border: 2px solid rgb(150, 150, 150);
             border-radius: 3px;
+            z-index: 9002;
         }
 
-        .nkrobtn:hover {
+        .nkroopen:hover {
             border: 2px solid rgb(100, 100, 100);
         }
 
-        .nkrobtn:active {
+        .nkroopen:active {
             border: 3px solid rgb(100, 150, 255);
         }
 
@@ -122,10 +125,22 @@
             font-family: 'Arial';
         }
 
+        .keys1 {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            border-width: 0px;
+            background-color: transparent;
+
+        }
+
         .btn {
             width: 80px;
             height: 40px;
-            background-color: rgb(230, 230, 230);
+            background-color: rgb(220, 220, 220);
             border-radius: 5px;
             cursor: pointer;
             /* box-shadow: 0 0 #ffffff; */
@@ -134,17 +149,15 @@
         }
 
         .btn:hover {
-            /* background-color: rgb(123, 165, 229); */
-            border: 2px solid rgb(200, 200, 200);
+            border: 2px solid rgb(180, 180, 180);
         }
 
         .btn:active {
-            border: 2px solid rgb(100, 150, 255);
+            border: 3px solid rgb(140, 140, 255);
         }
 
         .btn:focus,
-        .btn:focus-visible
-        .nkrobtn:focus,
+        .btn:focus-visible .nkrobtn:focus,
         .nkrobtn:focus-visible {
             outline: none;
         }
@@ -153,33 +166,61 @@
             position: fixed;
             z-index: 9998;
             height: 80%;
-            width: 80%;
-            left: 10%;
+            width: 70%;
+            left: 15%;
             top: 10%;
             background-color: #dfdfdf;
             border-radius: 5px;
-            border: 1px solid #d3d3d3 ;
-            /* display: none; */
+            border: 1px solid #d3d3d3;
+            display: none;
         }
 
-        .nkrokey {
+        .nkroboxbox {
             position: absolute;
             width: 32%;
             height: 80%;
             top: 5%;
             background-color: white;
             border-radius: 5px;
+            text-align: center;
+        }
+
+        .nkrobox {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .nkrocheckbox {
+            position: absolute;
+            width: 30%;
+            aspect-ratio: 2;
+            top: 15%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f2f2f2;
+            border-radius: 10px;
         }
 
         #nkroclose {
             position: absolute;
-            width: 40px;
-            height: 40px;
+            width: 29px;
+            height: 29px;
             top: -10px;
             right: -10px;
             border-radius: 50%;
+            background-color: white;
+            color: rgb(0, 0, 0);
+            font-size: 16px;
+            border: 1px solid rgb(60, 60, 60);
         }
 
+        #nkroclose:hover {
+            background-color: rgb(255, 85, 85);
+            border: 1px solid rgb(60, 60, 60);
+            transition-duration: 0.1ms;
+        }
     </style>
     <title>Document</title>
 </head>
@@ -190,8 +231,8 @@
         鍵&nbsp;盤&nbsp;測&nbsp;試
     </div>
 
+    <!-- 左標籤 -->
     <div id="left">
-        <!-- 左標籤 -->
         <div class="leftdiv">
             <div style="position: absolute; left: 10px; line-height:40px; transition-duration: 0.3s;"><b>Ghost Key</b>
             </div>
@@ -202,14 +243,14 @@
                 通常發生在傳統鍵盤的矩陣設計上，因為在按下第3 個按鍵時，可能觸發一個未預期的訊號。<br>
                 部分鍵盤品牌透過特殊設計的矩陣排列或搭載 N-Key Rollover（全鍵無衝突）等防鬼鍵技術，來解決這個問題。
             </p>
-            <button class="nkrobtn">NKRO測試</button>
+            <button class="nkroopen">NKRO測試</button>
 
         </div>
 
     </div>
 
     <!-- 鍵盤 -->
-    <div style=" position: fixed; left: 50%; transform: translateX(-50%); width: 1040px; height: 335px; top : 130px">
+    <div style=" position: fixed; left: 50%; transform: translateX(-50%); width: 1040px; height: 335px; top : 200px">
         <!-- 鍵盤左 -->
         <div id="keyboardL" class="keyboard"
             style="width: 690px; left: 5px; border-radius: 10px 0 0 10px; border-width:  3px 0px 3px 3px;">
@@ -293,8 +334,8 @@
                 <div id="Period" class="keys" style="left: 470px;">.</div>
                 <div id="Slash" class="keys" style="left: 515px;">/</div>
                 <div id="ShiftRight" class="keys" style="left: 560px; width: 115px;">Shift</div>
-                <!-- 第六排 -->
             </div>
+            <!-- 第六排 -->
             <div id="ctrl" class="line" style="position: absolute;top: 280px; left: 5px;">
                 <div id="ControlLeft" class="keys" style="left: 5px; width: 60px;">Ctrl</div>
                 <div id="MetaLeft" class="keys" style="left: 70px; width: 55px;">Win</div>
@@ -377,7 +418,7 @@
     <br><br><br>
     <!-- 按鍵紀錄 -->
     <div
-        style="display: flex ; align-items: center; position: fixed; left: 50%; transform: translateX(-50%); width: 1030px; height: 70px; background-color: #f2f2f2; border: 1px solid rgb(200, 200, 200); border-radius: 5px; top: 500px;">
+        style="display: flex ; align-items: center; position: fixed; left: 50%; transform: translateX(-50%); width: 1030px; height: 70px; background-color: #f2f2f2; border: 1px solid rgb(200, 200, 200); border-radius: 5px; top: 570px;">
         <!-- 重置按鈕 -->
         <div style="position: fixed; left: 3%;">
             <button id="re" class="btn" ;>重置</button>
@@ -389,12 +430,64 @@
     </div>
 
     <!-- nkro -->
-     <div id="nkro">
-        <button id="nkroclose"></button>
-        <div class="nkrokey" style="left: 1%;"></div>
-        <div class="nkrokey" style="left: 34%;"></div>
-        <div class="nkrokey" style="left: 67%;"></div>
-     </div>
+    <div id="nkro">
+        <button id="nkroclose">✕</button>
+        <!-- 上下左右 -->
+        <div class="nkroboxbox" style="left: 1%;">
+            <div class="nkrobox" style="width: 140px; height: 95px;">
+                <div class="FN" style="position: absolute;top: 5px;">
+                    <div id="nkroArrowUp" class="keys" style="left: 50px;">⭡</div>
+                </div>
+                <div class="FN" style="position: absolute;top: 50px;">
+                    <div id="nkroArrowLeft" class="keys" style="left: 5px;">⭠</div>
+                    <div id="nkroArrowDown" class="keys" style="left: 50px;">⭣</div>
+                    <div id="nkroArrowRight" class="keys" style="left: 95px;">⭢</div>
+                </div>
+            </div>
+            <div id="nkrocheckbox1" class="nkrocheckbox"></div>
+        </div>
+        <!-- qwas -->
+        <div class="nkroboxbox" style="left: 34%;">
+            <div class="nkrobox" style="width: 105px; height: 95px;">
+                <div id="tabRow" class="line" style="position: absolute;top: 5px; left: 5px;">
+                    <div id="nkroKeyQ" class="keys" style="left: 0px;">Q</div>
+                    <div id="nkroKeyW" class="keys" style="left: 45px;">W</div>
+                </div>
+                <div id="capslockRow" class="line" style="position: absolute;top: 50px; left: 5px;">
+                    <div id="nkroKeyA" class="keys" style="left: 15px;">A</div>
+                    <div id="nkroKeyS" class="keys" style="left: 60px;">S</div>
+                </div>
+            </div>
+            <div id="nkrocheckbox2" class="nkrocheckbox"></div>
+        </div>
+        <!-- zxcvuiop -->
+        <div class="nkroboxbox" style="left: 67%;">
+            <div class="nkrobox" style="width: 285px; height: 140px;">
+                <div id="tabRow" class="line" style="position: absolute;top: 10px;">
+                    <div id="nkroKeyU" class="keys" style="left: 105px;">U</div>
+                    <div id="nkroKeyI" class="keys" style="left: 150px;">I</div>
+                    <div id="nkroKeyO" class="keys" style="left: 195px;">O</div>
+                    <div id="nkroKeyP" class="keys" style="left: 240px;">P</div>
+                </div>
+                <div>
+                    <div class="keys1" style="top: 45px; left: 150px; top: 45px;"> •</div>
+                    <div class="keys1" style="top: 45px; left: 136.25px; top: 50.5px;"> •</div>
+                    <div class="keys1" style="top: 45px; left: 122.5px; top: 56px;"> •</div>
+                    <div class="keys1" style="top: 45px; left: 108.75px; top: 61.5px;"> •</div>
+                    <div class="keys1" style="top: 45px; left: 95px; top: 67px;"> •</div>
+
+                </div>
+                <div id="shiftRow" class="line" style="position: absolute;top: 90px;">
+                    <div id="nkroKeyZ" class="keys" style="left: 5px;">Z</div>
+                    <div id="nkroKeyX" class="keys" style="left: 50px;">X</div>
+                    <div id="nkroKeyC" class="keys" style="left: 95px;">C</div>
+                    <div id="nkroKeyV" class="keys" style="left: 140px;">V</div>
+                </div>
+            </div>
+            <div id="nkrocheckbox3" class="nkrocheckbox"></div>
+        </div>
+
+    </div>
 
 
 
@@ -415,11 +508,67 @@
             })
         })
 
+        // nkroopen
+        let nkrostate = 0;
+        let nkrostep = 0;
+        let nkrotable = [
+            [{ keyid: 'nkroArrowUp', value: 0 }, { keyid: 'nkroArrowLeft', value: 0 }, { keyid: 'nkroArrowDown', value: 0 }, { keyid: 'nkroArrowRight', value: 0 }],
+            [{ keyid: 'nkroKeyQ', value: 0 }, { keyid: 'nkroKeyW', value: 0 }, { keyid: 'nkroKeyA', value: 0 }, { keyid: 'nkroKeyS', value: 0 }],
+            [{ keyid: 'nkroKeyU', value: 0 }, { keyid: 'nkroKeyI', value: 0 }, { keyid: 'nkroKeyO', value: 0 }, { keyid: 'nkroKeyP', value: 0 }, { keyid: 'nkroKeyZ', value: 0 }, { keyid: 'nkroKeyX', value: 0 }, { keyid: 'nkroKeyC', value: 0 }, { keyid: 'nkroKeyV', value: 0 }]
+        ];
+        $('.nkroopen').on('click', function () {
+            $('#nkro').css('display', 'block');
+            nkrostate = 1;
+            nkrostep = 0;
+            nkrotest()
+        })
+
+        // nkroclose
+        $('#nkroclose').on('click', function () {
+            $('#nkro').css('display', 'none');
+            nkrostate = 0;
+        })
 
         // 按鍵反應
         let key;
         let count = 0;
         let addkeycount = 0;
+        addEventListener("keydown", function (e) {
+            e.preventDefault();
+            if (!nkrostate) {
+                key = e.code;
+                if (e.code == "ShiftLeft" || (e.key == "Shift" && e.location == 1)) {
+                    key = "ShiftLeft";
+                } else if (e.code == "ShiftRight" || (e.key == "Shift" && (e.location == 0 || e.location == 2))) {
+                    key = "ShiftRight";
+                }
+                $('#' + key).css('background-color', 'rgb(180, 180, 180)');
+            }
+        })
+        addEventListener("keyup", function (e) {
+            e.preventDefault();
+            if (!nkrostate) {
+                key = e.code;
+                if (e.code == "ShiftLeft" || (e.key == "Shift" && e.location == 1)) {
+                    key = "ShiftLeft";
+                } else if (e.code == "ShiftRight" || (e.key == "Shift" && (e.location == 0 || e.location == 2))) {
+                    key = "ShiftRight";
+                }
+                count = 0;
+                $('#' + key).css('background-color', 'rgb(220, 220, 220)');
+                addkey();
+                count++;
+            }
+        });
+        addEventListener('blur', function () {
+            if (!nkrostate) {
+                count++;
+                $('#' + key).css('background-color', 'rgb(220, 220, 220)');
+                if (count <= 1 & key) { addkey(); }
+                count = 0;
+            }
+        })
+
         function addkey() {
             if (key == 'Backspace' || key == 'Space' || key == 'CapsLock') {
                 switch (key) {
@@ -436,7 +585,6 @@
                 addkeycount++;
             }
             else {
-                console.log(key);
                 $('#record').prepend(`<div class ="keys" style="position: static; margin: 5px; font-size:${$('#' + key).css('font-size')};">${$('#' + key).html()}</div>`)
                 addkeycount++;
             }
@@ -445,46 +593,68 @@
                 addkeycount--;
             }
         };
-
-        addEventListener("keydown", function (e) {
-            e.preventDefault();
-            key = e.code;
-            if (e.code == "ShiftLeft" || (e.key == "Shift" && e.location == 1)) {
-                key = "ShiftLeft";
-            } else if (e.code == "ShiftRight" || (e.key == "Shift" && (e.location == 0 || e.location == 2))) {
-                key = "ShiftRight";
-            }
-            $('#' + key).css('background-color', 'rgb(180, 180, 180)');
-        })
-        addEventListener("keyup", function (e) {
-            e.preventDefault();
-            key = e.code;
-            if (e.code == "ShiftLeft" || (e.key == "Shift" && e.location == 1)) {
-                key = "ShiftLeft";
-            } else if (e.code == "ShiftRight" || (e.key == "Shift" && (e.location == 0 || e.location == 2))) {
-                key = "ShiftRight";
-            }
-            // console.log(key);
-            count = 0;
-            $('#' + key).css('background-color', 'rgb(220, 220, 220)');
-            addkey();
-            count++;
-        });
-        addEventListener('blur', function () {
-            count++;
-            $('#' + key).css('background-color', 'rgb(220, 220, 220)');
-            if (count <= 1 & key) { addkey(); }
-            count = 0;
-        })
-
         // 重置
         let originkeycolor = $('.keys').css('background-color');
-        console.log(originkeycolor);
         re.onclick = function () {
             $('.keys').css('background-color', originkeycolor);
             document.querySelector("#record").innerHTML = "";
             addkeycount = 0;
         };
+
+        // nkro function
+        function nkrotest() {
+            if (nkrostate) {
+                addEventListener("keydown", function (e) {
+                    e.preventDefault();
+                    if (nkrostate) {
+                        let nkrokeyid = 'nkro' + e.code;
+                        if (checkid(nkrokeyid)) {
+                            $('#' + nkrokeyid).css('background-color', 'rgb(180, 180, 180)');
+                            for (let i of nkrotable[nkrostep]) {
+                                if (nkrokeyid == i.keyid) {
+                                    i.value = 1;
+                                }
+                            }
+                        }
+                        if (checknkro()) {
+                            console.log('step' + nkrostep + '通過')
+                            $('#nkrocheckbox' + (nkrostep + 1)).css('background-color', 'green')
+                            nkrostep = (nkrostep < 3) ? ++nkrostep : 'finish';
+                            console.log('step' + nkrostep);
+                        };
+                    }
+                })
+                addEventListener("keyup", function (e) {
+                    e.preventDefault();
+                    if (nkrostate) {
+                        let nkrokeyid = 'nkro' + e.code;
+                        if (checkid(nkrokeyid)) {
+                            $('#' + nkrokeyid).css('background-color', 'rgb(250, 250, 250)');
+                            for (let i of nkrotable[nkrostep]) {
+                                if (nkrokeyid == i.keyid) {
+                                    i.value = 0;
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        function checkid(id) {
+            let check = 0;
+            for (let i of nkrotable[nkrostep]) {
+                check = (i.keyid == id) ? 1 : check;
+            }
+            return check;
+        }
+        function checknkro() {
+            let check = 1;
+            for (let i of nkrotable[nkrostep]) {
+                check = (i.value) ? check * 1 : check * 0;
+            }
+            return check;
+        }
+
 
     </script>
 </body>
