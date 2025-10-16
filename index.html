@@ -178,7 +178,7 @@
         .nkroboxbox {
             position: absolute;
             width: 32%;
-            height: 80%;
+            height: 70%;
             top: 5%;
             background-color: white;
             border-radius: 5px;
@@ -199,8 +199,44 @@
             top: 15%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #f2f2f2;
-            border-radius: 10px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+
+        .nkrocheckbox::before {
+            content: "";
+            position: absolute;
+            top: 0px;
+            bottom: 0px;
+            right: -20%;
+            left: 0px;
+            background: #00ff00;
+            transform: rotateZ(-90deg) translate(-100%, -110%);
+            transform-origin: top left;
+            transition: transform 1s;
+            transition-timing-function: linear;
+        }
+
+        .nkrocheckbox.active::before {
+            transform: rotateZ(0deg) translate(0%, -0%);
+        }
+
+        .nkrocheckbox::after {
+            content: "";
+            position: absolute;
+            top: 10%;
+            bottom: 10%;
+            right: 5%;
+            left: 5%;
+            border-radius: 6px;
+            background-color: #ffffff;
+        }
+
+        .nkrocheckbox.active::after {
+            content: "✓";
+            color: #00ff00;
+            /* line-height:-11110%; */
         }
 
         #nkroclose {
@@ -221,6 +257,18 @@
             border: 1px solid rgb(60, 60, 60);
             transition-duration: 0.1ms;
         }
+
+        #nkrotextbox {
+            position: absolute;
+            width: 98%;
+            height: 21%;
+            top: 77%;
+            left: 1%;
+            background-color: white;
+            border-radius: 5px;
+            text-align: center;
+        }
+
     </style>
     <title>Document</title>
 </head>
@@ -248,6 +296,7 @@
         </div>
 
     </div>
+
 
     <!-- 鍵盤 -->
     <div style=" position: fixed; left: 50%; transform: translateX(-50%); width: 1040px; height: 335px; top : 200px">
@@ -444,7 +493,7 @@
                     <div id="nkroArrowRight" class="keys" style="left: 95px;">⭢</div>
                 </div>
             </div>
-            <div id="nkrocheckbox1" class="nkrocheckbox"></div>
+            <div id="nkrocheckbox0" class="nkrocheckbox"></div>
         </div>
         <!-- qwas -->
         <div class="nkroboxbox" style="left: 34%;">
@@ -458,7 +507,7 @@
                     <div id="nkroKeyS" class="keys" style="left: 60px;">S</div>
                 </div>
             </div>
-            <div id="nkrocheckbox2" class="nkrocheckbox"></div>
+            <div id="nkrocheckbox1" class="nkrocheckbox"></div>
         </div>
         <!-- zxcvuiop -->
         <div class="nkroboxbox" style="left: 67%;">
@@ -484,9 +533,10 @@
                     <div id="nkroKeyV" class="keys" style="left: 140px;">V</div>
                 </div>
             </div>
-            <div id="nkrocheckbox3" class="nkrocheckbox"></div>
+            <div id="nkrocheckbox2" class="nkrocheckbox"></div>
+        
         </div>
-
+        <div id="nkrotextbox"></div>
     </div>
 
 
@@ -511,22 +561,39 @@
         // nkroopen
         let nkrostate = 0;
         let nkrostep = 0;
-        let nkrotable = [
+        let steppluscount = 0;
+        let timeoutID = undefined;
+        const nkrotable = [
             [{ keyid: 'nkroArrowUp', value: 0 }, { keyid: 'nkroArrowLeft', value: 0 }, { keyid: 'nkroArrowDown', value: 0 }, { keyid: 'nkroArrowRight', value: 0 }],
             [{ keyid: 'nkroKeyQ', value: 0 }, { keyid: 'nkroKeyW', value: 0 }, { keyid: 'nkroKeyA', value: 0 }, { keyid: 'nkroKeyS', value: 0 }],
             [{ keyid: 'nkroKeyU', value: 0 }, { keyid: 'nkroKeyI', value: 0 }, { keyid: 'nkroKeyO', value: 0 }, { keyid: 'nkroKeyP', value: 0 }, { keyid: 'nkroKeyZ', value: 0 }, { keyid: 'nkroKeyX', value: 0 }, { keyid: 'nkroKeyC', value: 0 }, { keyid: 'nkroKeyV', value: 0 }]
         ];
         $('.nkroopen').on('click', function () {
+            // 初始化
+            $('.nkrocheckbox').removeClass('active');
+            for (let i = 0; i < 3; i++) {
+                for (let j of nkrotable[i]) {
+                    j.value = 0;
+                    $('#' + j.keyid).css('background-color', 'rgb(250, 250, 250)');
+                }
+            }
+            nkrostep = 0;
+            steppluscount = 0;
+            timeoutID = undefined;
+            removeEventListener("keydown", nkrotestkdEL())
+            removeEventListener("keyup", nkrotestkuEL())
+
             $('#nkro').css('display', 'block');
             nkrostate = 1;
-            nkrostep = 0;
-            nkrotest()
+            nkrotest(nkrostep)
         })
 
         // nkroclose
         $('#nkroclose').on('click', function () {
             $('#nkro').css('display', 'none');
             nkrostate = 0;
+            removeEventListener("keydown", nkrotestkdEL())
+            removeEventListener("keyup", nkrotestkuEL())
         })
 
         // 按鍵反應
@@ -603,41 +670,65 @@
 
         // nkro function
         function nkrotest() {
-            if (nkrostate) {
-                addEventListener("keydown", function (e) {
-                    e.preventDefault();
-                    if (nkrostate) {
-                        let nkrokeyid = 'nkro' + e.code;
-                        if (checkid(nkrokeyid)) {
-                            $('#' + nkrokeyid).css('background-color', 'rgb(180, 180, 180)');
-                            for (let i of nkrotable[nkrostep]) {
-                                if (nkrokeyid == i.keyid) {
-                                    i.value = 1;
-                                }
-                            }
-                        }
-                        if (checknkro()) {
-                            console.log('step' + nkrostep + '通過')
-                            $('#nkrocheckbox' + (nkrostep + 1)).css('background-color', 'green')
-                            nkrostep = (nkrostep < 3) ? ++nkrostep : 'finish';
-                            console.log('step' + nkrostep);
-                        };
-                    }
-                })
-                addEventListener("keyup", function (e) {
-                    e.preventDefault();
-                    if (nkrostate) {
-                        let nkrokeyid = 'nkro' + e.code;
-                        if (checkid(nkrokeyid)) {
-                            $('#' + nkrokeyid).css('background-color', 'rgb(250, 250, 250)');
-                            for (let i of nkrotable[nkrostep]) {
-                                if (nkrokeyid == i.keyid) {
-                                    i.value = 0;
-                                }
+            addEventListener("keydown", nkrotestkdEL())
+            addEventListener("keyup", nkrotestkuEL())
+        }
+        function nkrotestkuEL() {
+            return function (e) {
+                e.preventDefault();
+                if (nkrostate) {
+                    let nkrokeyid = 'nkro' + e.code;
+                    if (checkid(nkrokeyid)) {
+                        $('#' + nkrokeyid).css('background-color', 'rgb(250, 250, 250)');
+                        for (let i of nkrotable[nkrostep]) {
+                            if (nkrokeyid == i.keyid) {
+                                i.value = 0;
                             }
                         }
                     }
-                });
+                }
+            };
+        }
+        function nkrotestkdEL() {
+            return function (e) {
+                e.preventDefault();
+                if (nkrostate) {
+                    let nkrokeyid = 'nkro' + e.code;
+                    if (checkid(nkrokeyid)) {
+                        $('#' + nkrokeyid).css('background-color', 'rgb(180, 180, 180)');
+                        for (let i of nkrotable[nkrostep]) {
+                            if (nkrokeyid == i.keyid) {
+                                i.value = 1;
+                            }
+                        }
+                    }
+                    if (checknkro()) {
+                        if (timeoutID == undefined) {
+                            console.log('timeout set')
+                            timeoutID = setTimeout(function () {
+                                console.log('step' + nkrostep + '通過');
+                                if (nkrostep < 3) {
+                                    nkrostep++;
+                                    thisstepresult = 1;
+                                    nkrotest(nkrostep);
+                                }
+                                else {
+                                    nkrostep = 'finish';
+                                }
+                                timeoutID = undefined;
+                            }, 500);
+                        }
+                        $('#nkrocheckbox' + nkrostep).addClass('active');
+                        addEventListener("keyup", function (e) {
+                            let nkrokeyid = 'nkro' + e.code;
+                            if (checkid(nkrokeyid)) {
+                                $('#nkrocheckbox' + nkrostep).removeClass('active');
+                                clearTimeout(timeoutID);
+                                console.log('removeClass');
+                            }
+                        }, { once: true })
+                    }
+                }
             }
         }
         function checkid(id) {
