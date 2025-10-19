@@ -61,9 +61,9 @@
         .nkroopen {
             position: relative;
             left: 55px;
-            bottom: -15px;
+            bottom: 0px;
             width: 100px;
-            height: 30px;
+            height: 50px;
             cursor: pointer;
             background-color: #c7c7ff;
             border: 2px solid rgb(150, 150, 150);
@@ -185,6 +185,7 @@
             background-color: white;
             font-size: 40px;
             border: 0px solid #ededed;
+            cursor: pointer;
             /* border-radius: 10px; */
         }
 
@@ -641,7 +642,6 @@
                 count = 0;
             }
         })
-
         function addkey() {
             if (key == 'Backspace' || key == 'Space' || key == 'CapsLock') {
                 switch (key) {
@@ -666,7 +666,8 @@
                 addkeycount--;
             }
         };
-        // 重置
+        
+        // 重置按鈕
         let originkeycolor = $('.keys').css('background-color');
         re.onclick = function () {
             $('.keys').css('background-color', originkeycolor);
@@ -674,57 +675,67 @@
             addkeycount = 0;
         };
 
-
-
         // nkro
         let nkrostate = 0;
         let nkrostep = 0;
         let steppluscount = 0;
         let overtimeid = undefined;
         let timeoutID = undefined;
-        let nkrotable = [
-            [{ keyid: 'nkroArrowUp', value: 0 }, { keyid: 'nkroArrowLeft', value: 0 }, { keyid: 'nkroArrowDown', value: 0 }, { keyid: 'nkroArrowRight', value: 0 }],
-            [{ keyid: 'nkroKeyQ', value: 0 }, { keyid: 'nkroKeyW', value: 0 }, { keyid: 'nkroKeyA', value: 0 }, { keyid: 'nkroKeyS', value: 0 }],
-            [{ keyid: 'nkroKeyU', value: 0 }, { keyid: 'nkroKeyI', value: 0 }, { keyid: 'nkroKeyO', value: 0 }, { keyid: 'nkroKeyP', value: 0 }, { keyid: 'nkroKeyZ', value: 0 }, { keyid: 'nkroKeyX', value: 0 }, { keyid: 'nkroKeyC', value: 0 }, { keyid: 'nkroKeyV', value: 0 }]
-        ];
-        const nkrotext = [
-            '請同時長按<b style="color:blue">&nbsp上&nbsp下&nbsp左&nbsp右&nbsp</b>鍵不放',
-            '請同時長按<b style="color:blue">&nbspQ&nbspW&nbspA&nbspS&nbsp</b>鍵不放',
-            '請同時長按<b style="color:blue">&nbspZ&nbspX&nbspC&nbspV&nbspU&nbspI&nbspO&nbspP&nbsp</b>鍵不放',
-            '測試結束，您的鍵盤<b>有</b>&nbspNKRO&nbsp功能',
-            '測試結束，您的鍵盤<b>沒有</b>&nbspNKRO&nbsp功能'
-        ]
-        // nkroopen
-        $('.nkroopen').on('click', function () {
-            $('#nkro').css('display', 'block');
-            // 初始化
-            cleanall();
-            // 開始
-            $('#startbtn').on('click', function () {
-                $('#nkroboxbox' + nkrostep).css('border', '0.5vw solid #aaaaff');
-                $('#startbtn').css('display', 'none');
-                nkrostate = 1;
-                nkrotest()
-            })
-        })
+        let nkrotestkdEL = function () {
+            return function (e) {
+                e.preventDefault();
+                let timeoutcheckstep = nkrostep;
+                // 超時則失敗                
+                if (overtimeid == undefined) {
+                    nkrotesttexttimeout();
+                    overtimeid = setTimeout(() => {
+                        if (timeoutcheckstep == nkrostep) {
+                            $('#nkrocheckbox' + nkrostep).removeClass('active');
+                            nkrostep = 4;
+                            $('.nkrotextbox').html(nkrotext[nkrostep]);
+                        }
+                    }, 5000);
+                }
+                let nkrokeyid = 'nkro' + e.code;
+                // 按下按鍵時確認是否為目標 按鍵加深 i.value =1
+                if (checkid(nkrokeyid)) {
+                    $('#' + nkrokeyid).css('background-color', 'rgb(180, 180, 180)');
+                    for (let i of nkrotable[nkrostep]) {
+                        if (nkrokeyid == i.keyid) {
+                            i.value = 1;
+                        }
+                    }
+                }
+                if (checknkro()) {
+                    // i.value檢測通過撥放打勾動畫
+                    $('#nkrocheckbox' + nkrostep).addClass('active');
+                    // 完成進入下階段
+                    if (timeoutID == undefined) {
+                        timeoutID = setTimeout(function () {
+                            console.log('step' + nkrostep + '通過');
+                            $('#nkrocheckbox' + nkrostep).addClass('active2');
+                            nkrostep++;
+                            clearTimeout(overtimeid);
+                            overtimeid = undefined;
+                            timeoutID = undefined;
+                            cleartimeline()
+                            nkrotest();
+                        }, 500);
+                    }
+                    // keyup取消打勾動畫
+                    addEventListener("keyup", function (e) {
+                        let nkrokeyid = 'nkro' + e.code;
+                        if (checkid(nkrokeyid)) {
+                            $('#nkrocheckbox' + nkrostep).removeClass('active');
+                            clearTimeout(timeoutID);
+                            timeoutID = undefined;
+                        }
+                    }, { once: true })
+                }
 
-        // nkroclose
-        $('#nkroclose').on('click', function () {
-            $('#startbtn').css('display', 'block');
-            $('#nkro').css('display', 'none');
-            nkrostate = 0;
-            removeEventListener("keydown", nkrotestkdEL())
-            removeEventListener("keyup", nkrotestkuEL())
-        })
-
-
-        // nkro function
-        function nkrotest() {
-            addEventListener("keydown", nkrotestkdEL());
-            addEventListener("keyup", nkrotestkuEL());
-            nkrotesttext();
+            }
         }
-        function nkrotestkuEL() {
+        let nkrotestkuEL = function () {
             return function (e) {
                 e.preventDefault();
                 if (nkrostate) {
@@ -740,64 +751,54 @@
                 }
             };
         }
-        function nkrotestkdEL() {
-            return function (e) {
-                e.preventDefault();
-                let timeoutcheckstep = nkrostep;
-                // 檢查state和step  
-                if (nkrostate && nkrostep < 3) {
-                    // 超時則失敗                
-                    if (overtimeid == undefined) {
-                        nkrotesttexttimeout();
-                        overtimeid = setTimeout(() => {
-                            if (timeoutcheckstep == nkrostep) {
-                                nkrostep = 4;
-                                $('.nkrotextbox').html(nkrotext[nkrostep]);
-                            }
-                        }, 5000);
-                    }
-                    let nkrokeyid = 'nkro' + e.code;
-                    // 按下按鍵時確認是否為目標 按鍵加深 i.value =1
-                    if (checkid(nkrokeyid)) {
-                        $('#' + nkrokeyid).css('background-color', 'rgb(180, 180, 180)');
-                        for (let i of nkrotable[nkrostep]) {
-                            if (nkrokeyid == i.keyid) {
-                                i.value = 1;
-                            }
-                        }
-                    }
-                    if (checknkro()) {
-                        // i.value檢測通過撥放打勾動畫
-                        $('#nkrocheckbox' + nkrostep).addClass('active');
-                        // 完成進入下階段
-                        if (timeoutID == undefined) {
-                            timeoutID = setTimeout(function () {
-                                console.log('step' + nkrostep + '通過');
-                                $('#nkrocheckbox' + nkrostep).addClass('active2');
-                                if (nkrostep < 3) {
-                                    nkrostep++;
-                                    thisstepresult = 1;
-                                    nkrotest();
-                                }
-                                else {
-                                    nkrostep = 'finish';
-                                }
-                                clearTimeout(overtimeid);
-                                overtimeid = undefined;
-                                timeoutID = undefined;
-                            }, 500);
-                        }
-                        // keyup取消打勾動畫
-                        addEventListener("keyup", function (e) {
-                            let nkrokeyid = 'nkro' + e.code;
-                            if (checkid(nkrokeyid)) {
-                                $('#nkrocheckbox' + nkrostep).removeClass('active');
-                                clearTimeout(timeoutID);
-                                timeoutID = undefined;
-                            }
-                        }, { once: true })
-                    }
-                }
+        // evenlistener list
+        let list = [];
+        function alllistener(type, func) {
+            list.push({
+                type: type,
+                func: func
+            });
+            addEventListener(type, func);
+        }
+        let nkrotable = [
+            [{ keyid: 'nkroArrowUp', value: 0 }, { keyid: 'nkroArrowLeft', value: 0 }, { keyid: 'nkroArrowDown', value: 0 }, { keyid: 'nkroArrowRight', value: 0 }],
+            [{ keyid: 'nkroKeyQ', value: 0 }, { keyid: 'nkroKeyW', value: 0 }, { keyid: 'nkroKeyA', value: 0 }, { keyid: 'nkroKeyS', value: 0 }],
+            [{ keyid: 'nkroKeyU', value: 0 }, { keyid: 'nkroKeyI', value: 0 }, { keyid: 'nkroKeyO', value: 0 }, { keyid: 'nkroKeyP', value: 0 }, { keyid: 'nkroKeyZ', value: 0 }, { keyid: 'nkroKeyX', value: 0 }, { keyid: 'nkroKeyC', value: 0 }, { keyid: 'nkroKeyV', value: 0 }]
+        ];
+        const nkrotext = [
+            '請同時長按<b style="color:blue">&nbsp上&nbsp下&nbsp左&nbsp右&nbsp</b>鍵不放',
+            '請同時長按<b style="color:blue">&nbspQ&nbspW&nbspA&nbspS&nbsp</b>鍵不放',
+            '請同時長按<b style="color:blue">&nbspZ&nbspX&nbspC&nbspV&nbspU&nbspI&nbspO&nbspP&nbsp</b>鍵不放',
+            '測試結束，您的鍵盤<b>通過</b>&nbspNKRO&nbsp測試',
+            '測試結束，您的鍵盤<b>未通過</b>&nbspNKRO&nbsp測試'
+        ]
+        // nkroopen
+        $('.nkroopen').on('click', function () {
+            $('#nkro').css('display', 'block');
+            // cleanall();
+            // 開始
+            $('#startbtn').on('click', function () {
+                $('#startbtn').css('display', 'none');
+                nkrostate = 1;
+                nkrotest()
+            })
+        })
+        
+        // nkroclose
+        $('#nkroclose').on('click', function () {
+            $('#nkro').css('display', 'none');
+            nkrostate = 0;
+            cleanall();
+        })
+
+        // nkro function
+        function nkrotest() {
+            // 下方文字&上方藍框
+            nkrotesttext();
+            // 檢查state和step
+            if (nkrostate && nkrostep < 3) {
+                alllistener("keydown", nkrotestkdEL());
+                alllistener("keyup", nkrotestkuEL());
             }
         }
         function checkid(id) {
@@ -843,28 +844,24 @@
         // 初始化
         function cleanall() {
             cleartimeline();
+            $('#startbtn').css('display', 'block');
             $('.nkrocheckbox').removeClass('active');
-            $('.nkrocheckbox').removeClass('active2');
             $('.nkroboxbox').css('border', '0vw');
+            $('.nkrocheckbox').removeClass('active2');
+            nkrostep = 0;
+            steppluscount = 0;
+            timeoutID = undefined;
+            overtimeid = undefined;
+            for (let i of list) {
+                removeEventListener(i.type, i.func)
+            }
             for (let i = 0; i < 3; i++) {
                 for (let j of nkrotable[i]) {
                     j.value = 0;
                     $('#' + j.keyid).css('background-color', 'rgb(250, 250, 250)');
                 }
             }
-            nkrostep = 0;
-            steppluscount = 0;
-            timeoutID = undefined;
-            overtimeid = undefined;
-            removeEventListener("keydown", nkrotestkdEL())
-            removeEventListener("keyup", nkrotestkuEL())
-            for (let i = 0; i < 3; i++) {
-                for (let j of nkrotable[i]) {
-                    j.value =0;
-                }
-            }
         }
-
     </script>
 </body>
 
