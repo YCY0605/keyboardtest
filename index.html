@@ -55,13 +55,13 @@
             display: none;
             border: solid rgb(150, 150, 150);
             border-width: 0 1px 1px 1px;
-            z-index: 9000;
+            z-index: 9010;
         }
 
         .nkroopen {
-            position: relative;
+            position: absolute;
             left: 55px;
-            bottom: 0px;
+            bottom: -25px;
             width: 100px;
             height: 50px;
             cursor: pointer;
@@ -76,6 +76,27 @@
         }
 
         .nkroopen:active {
+            border: 3px solid rgb(100, 150, 255);
+        }
+
+        .typeopen {
+            position: absolute;
+            left: 55px;
+            bottom: -25px;
+            width: 100px;
+            height: 50px;
+            cursor: pointer;
+            background-color: #c7c7ff;
+            border: 2px solid rgb(150, 150, 150);
+            border-radius: 3px;
+            z-index: 9002;
+        }
+
+        .typeopen:hover {
+            border: 2px solid rgb(100, 100, 100);
+        }
+
+        .typeopen:active {
             border: 3px solid rgb(100, 150, 255);
         }
 
@@ -183,7 +204,7 @@
             top: 77%;
             left: 1%;
             background-color: white;
-            font-size: 40px;
+            font-size: 3vw;
             border: 0px solid #ededed;
             cursor: pointer;
             /* border-radius: 10px; */
@@ -291,7 +312,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 4vw;
+            font-size: 3vw;
             font-family: 'cwTeXYen';
             overflow: hidden;
 
@@ -311,6 +332,39 @@
         .nkrotextbox.active::after {
             right: 3%;
         }
+
+        #typetextbox {
+            position: absolute;
+            display: flex;
+            overflow: hidden;
+            line-height: 40px;
+            width: 950px;
+            height: 80px;
+            background-color: #ffffff;
+            left: 5px;
+            top: 5px;
+        }
+
+        #cover {
+            content: "";
+            position: fixed;
+            height: 80px;
+            left: 0px;
+            width: 5px;
+            background-color: #ffffff;
+        }
+
+        .text {
+            position: static;
+            padding: 0px;
+            margin: 0px;
+            font-size: 20px;
+        }
+
+
+        pre {
+            margin-block: 0;
+        }
     </style>
     <title>Document</title>
 </head>
@@ -322,25 +376,34 @@
     </div>
 
     <!-- 左標籤 -->
-    <div id="left">
-        <div class="leftdiv">
+    <div id="gostkeytag">
+        <div id="gostkey" class="leftdiv" style="top: 100px;">
             <div style="position: absolute; left: 10px; line-height:40px; transition-duration: 0.3s;"><b>Ghost Key</b>
             </div>
         </div>
-        <div class="leftdiv2">
+        <div id="gostkey2" class="leftdiv2" style="top: 140px;">
             <p>Ghost key（鬼鍵）：<br>
                 同時按下鍵盤多個按鍵時，可能導致某些按鍵沒有反應或發生衝突的現象。<br>
                 通常發生在傳統鍵盤的矩陣設計上，因為在按下第3 個按鍵時，可能觸發一個未預期的訊號。<br>
                 部分鍵盤品牌透過特殊設計的矩陣排列或搭載 N-Key Rollover（全鍵無衝突）等防鬼鍵技術，來解決這個問題。
             </p>
             <button class="nkroopen">NKRO測試</button>
-
         </div>
-
+    </div>
+    <div id="typetag">
+        <div id="type" class="leftdiv" style="top: 160px;">
+            <div style="position: absolute; left: 10px; line-height:40px; transition-duration: 0.3s;"><b>打字練習</b>
+            </div>
+        </div>
+        <div id="type2" class="leftdiv2" style="top: 200px;height: 100px;">
+            <p>來練習打字吧！
+            </p>
+            <button class="typeopen">打字練習</button>
+        </div>
     </div>
 
     <!-- 鍵盤 -->
-    <div style=" position: fixed; left: 50%; transform: translateX(-50%); width: 1040px; height: 335px; top : 200px">
+    <div style=" position: fixed; left: 50%; transform: translateX(-50%); width: 1040px; height: 335px; top : 200px;">
         <!-- 鍵盤左 -->
         <div id="keyboardL" class="keyboard"
             style="width: 690px; left: 5px; border-radius: 10px 0 0 10px; border-width:  3px 0px 3px 3px;">
@@ -586,19 +649,47 @@
         </button>
     </div>
 
+    <!-- type -->
+    <div style=" position: fixed; left: 50%; transform: translateX(-50%); width: 1040px; height: 90px; top : 100px;background-color: rgb(240, 240, 240);
+            border: solid rgb(200, 200, 200);
+            border-width: 2px; border-radius: 5px;">
+        <div id="typetextbox">
+            <div id="cover"></div>
+        </div>
+        <button id="typestart" style="position: absolute;height: 30px; width: 60px; right: 5px; top: 5px;">開始</button>
+
+        <button style="position: absolute;height: 30px; width: 60px; right: 5px; top: 45px;">重製</button>
+    </div>
+
+    <canvas id="myCanvas"></canvas>
+
     <script>
         // 標籤
-        $('.leftdiv').on('mouseenter', function (e) {
-            $('.leftdiv').css('width', '240px').css('clip-path', 'polygon(0% 0%, 87.5% 0%, 100% 50%, 87.5% 100%, 0% 100%)');
-            $('.leftdiv div').css('left', '100px');
+        $('#gostkey').on('mouseenter', function (e) {
+            $('#gostkey').css('width', '240px').css('clip-path', 'polygon(0% 0%, 87.5% 0%, 100% 50%, 87.5% 100%, 0% 100%)');
+            $('#gostkey div').css('left', '100px');
             let leftdiv2display = 'block';
-            setTimeout(function () { $('.leftdiv2').css('display', leftdiv2display); }, 300);
-            $('#left').on('mouseleave', function () {
+            setTimeout(function () { $('#gostkey2').css('display', leftdiv2display); }, 300);
+            $('#gostkeytag').on('mouseleave', function () {
                 leftdiv2display = 'none';
-                $('.leftdiv2').css('display', leftdiv2display);
+                $('#gostkey2').css('display', leftdiv2display);
                 setTimeout(function () {
-                    $('.leftdiv').css('width', '120px').css('clip-path', 'polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%)');
-                    $('.leftdiv div').css('left', '10px');
+                    $('#gostkey').css('width', '120px').css('clip-path', 'polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%)');
+                    $('#gostkey div').css('left', '10px');
+                }, 100);
+            })
+        })
+        $('#type').on('mouseenter', function (e) {
+            $('#type').css('width', '240px').css('clip-path', 'polygon(0% 0%, 87.5% 0%, 100% 50%, 87.5% 100%, 0% 100%)');
+            $('#type div').css('left', '100px');
+            let leftdiv2display = 'block';
+            setTimeout(function () { $('#type2').css('display', leftdiv2display); }, 300);
+            $('#typetag').on('mouseleave', function () {
+                leftdiv2display = 'none';
+                $('#type2').css('display', leftdiv2display);
+                setTimeout(function () {
+                    $('#type').css('width', '120px').css('clip-path', 'polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%)');
+                    $('#type div').css('left', '10px');
                 }, 100);
             })
         })
@@ -616,7 +707,7 @@
                 } else if (e.code == "ShiftRight" || (e.key == "Shift" && (e.location == 0 || e.location == 2))) {
                     key = "ShiftRight";
                 }
-                $('#' + key).css('background-color', 'rgb(180, 180, 180)');
+                $('#' + key).css('background-color', 'rgb(160, 160, 160)');
             }
         })
         addEventListener("keyup", function (e) {
@@ -629,7 +720,7 @@
                     key = "ShiftRight";
                 }
                 count = 0;
-                $('#' + key).css('background-color', 'rgb(220, 220, 220)');
+                $('#' + key).css('background-color', 'rgb(200, 200, 200)');
                 addkey();
                 count++;
             }
@@ -637,7 +728,7 @@
         addEventListener('blur', function () {
             if (!nkrostate) {
                 count++;
-                $('#' + key).css('background-color', 'rgb(220, 220, 220)');
+                $('#' + key).css('background-color', 'rgb(200, 200, 200)');
                 if (count <= 1 & key) { addkey(); }
                 count = 0;
             }
@@ -666,7 +757,7 @@
                 addkeycount--;
             }
         };
-        
+
         // 重置按鈕
         let originkeycolor = $('.keys').css('background-color');
         re.onclick = function () {
@@ -684,17 +775,20 @@
         let nkrotestkdEL = function () {
             return function (e) {
                 e.preventDefault();
-                let timeoutcheckstep = nkrostep;
                 // 超時則失敗                
                 if (overtimeid == undefined) {
+                    overtimeidlist = [];
                     nkrotesttexttimeout();
+                    let stepcheck = nkrostep;
                     overtimeid = setTimeout(() => {
-                        if (timeoutcheckstep == nkrostep) {
+                        if (stepcheck == nkrostep) {
+                            console.log('stepcheck=' + stepcheck + 'nkrostep=' + nkrostep);
                             $('#nkrocheckbox' + nkrostep).removeClass('active');
                             nkrostep = 4;
                             $('.nkrotextbox').html(nkrotext[nkrostep]);
                         }
                     }, 5000);
+                    overtimeidlist.push(overtimeid);
                 }
                 let nkrokeyid = 'nkro' + e.code;
                 // 按下按鍵時確認是否為目標 按鍵加深 i.value =1
@@ -715,15 +809,25 @@
                             console.log('step' + nkrostep + '通過');
                             $('#nkrocheckbox' + nkrostep).addClass('active2');
                             nkrostep++;
-                            clearTimeout(overtimeid);
+                            for (let id of overtimeidlist) {
+                                clearTimeout(id);
+                            }
+                            for (let i of list) {
+                                removeEventListener(i.type, i.func);
+                            }
+                            overtimeidlist = [];
                             overtimeid = undefined;
                             timeoutID = undefined;
-                            cleartimeline()
-                            nkrotest();
+                            cleartimeline();
+                            nkrotesttext();
+                            addEventListener('keyup', function () {
+                                nkrotest();
+                            }, { once: true })
                         }, 500);
                     }
                     // keyup取消打勾動畫
                     addEventListener("keyup", function (e) {
+                        console.log('取消打勾');
                         let nkrokeyid = 'nkro' + e.code;
                         if (checkid(nkrokeyid)) {
                             $('#nkrocheckbox' + nkrostep).removeClass('active');
@@ -775,15 +879,14 @@
         // nkroopen
         $('.nkroopen').on('click', function () {
             $('#nkro').css('display', 'block');
-            // cleanall();
-            // 開始
+            // 開始按鈕
             $('#startbtn').on('click', function () {
                 $('#startbtn').css('display', 'none');
                 nkrostate = 1;
                 nkrotest()
             })
         })
-        
+
         // nkroclose
         $('#nkroclose').on('click', function () {
             $('#nkro').css('display', 'none');
@@ -825,13 +928,13 @@
             $('#nkroboxbox' + (nkrostep - 1)).css('border', '0.5vw solid #f2f2f2');
             $('.nkrotextbox').html(nkrotext[nkrostep]);
         }
+        // 設定倒計時條
         function nkrotesttexttimeout() {
             cleartimeline()
             if (nkrostep < 3) {
                 setTimeout(() => {
                     $('.nkrotextbox').addClass('active');
                 }, 100);
-                console.log('nkrotesttexttimeout');
             }
         }
         function cleartimeline() {
@@ -861,7 +964,87 @@
                     $('#' + j.keyid).css('background-color', 'rgb(250, 250, 250)');
                 }
             }
+            for (let id of overtimeidlist) {
+                clearTimeout(id);
+                console.log('clear id:' + id);
+            }
         }
+
+        // 打字練習
+        // 開啟介面
+        $('.typeopen').on('click', function () {
+            $('#typewindow').css('display', 'block');
+        })
+
+        // 文字載入
+        function poemload() {
+            let poem = new XMLHttpRequest;
+            poem.open('GET', './poem.text');
+            poem.send();
+            poemwordarray = [];
+            poem.onload = function () {
+                let word = '';
+                for (let i = 0; i < poem.responseText.length; i++) {
+                    if (poem.responseText[i] != ' ') {
+                        word += poem.responseText[i];
+                    }
+                    else {
+                        word += ' ';
+                        poemwordarray.push(word)
+                        $('#typetextbox').append("<div class='text'><pre>" + word + "</pre></div>")
+                        word = '';
+                    }
+                }
+                // console.log(poemwordarray)
+            };
+
+        }
+
+        // 開始按鈕
+        $('#typestart').on('click', function () {
+            poemload();
+            addEventListener('keyup', typing);
+        })
+
+        // 偵測輸入
+        let keylist = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', ',', ';', '.'];
+        let poemwordarrayindex = 0;
+        let wordindex = 0;
+        let canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        ctx.font = "20px monospace";
+        let textwidth = ctx.measureText('a').width;
+
+        function typing(e) {
+            if (keylist.find((k) => (e.key == k))) {
+                console.log(poemwordarray[poemwordarrayindex][wordindex]);
+                if (e.key == poemwordarray[poemwordarrayindex][wordindex]) {
+                    console.log('poemwordarrayindex:' + poemwordarrayindex)
+                    console.log('wordindex:' + wordindex)
+                    if (wordindex < (poemwordarray[poemwordarrayindex].length - 1)) {
+                        wordindex++;
+                        console.log('wordindex++')
+                    }
+                    else {
+                        wordindex = 0;
+                        poemwordarrayindex++;
+                        console.log('poemwordarrayindex++')
+                    }
+                    let boxwidth = $('#typetextbox').css('width');
+                    let boxwidth2 = $('#cover').css('width');
+                    let boxleft = $('#typetextbox').css('left');
+                    let boxleft2 = $('#cover').css('left');
+                    $('#typetextbox').css('width', (parseFloat(boxwidth) + textwidth) + 'px').css('left', (parseFloat(boxleft) - textwidth) + 'px');
+                    $('#cover').css('width', (parseFloat(boxwidth2) + textwidth) + 'px').css('left', (parseFloat(boxleft2) - textwidth) + 'px');
+                    console.log('boxwidth2:' + boxwidth2)
+                }
+                else {
+                    // finish;
+                }
+            }
+        }
+
+
     </script>
 </body>
 
