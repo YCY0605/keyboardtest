@@ -164,7 +164,6 @@
             background-color: rgb(220, 220, 220);
             border-radius: 5px;
             cursor: pointer;
-            /* box-shadow: 0 0 #ffffff; */
             border: 0px solid rgb(150, 150, 150);
             font-size: 16px;
         }
@@ -174,7 +173,7 @@
         }
 
         .btn:active {
-            border: 3px solid rgb(140, 140, 255);
+            border: 2.5px solid rgb(140, 140, 255);
         }
 
         .btn:focus,
@@ -333,25 +332,96 @@
             right: 3%;
         }
 
+        /* type */
+        .typebtn {
+            background-color: rgb(220, 220, 220);
+            font-size: 15px;
+            border-radius: 5px;
+            border: 1px rgb(170, 170, 170) solid;
+            position: absolute;
+            height: 37px;
+            width: 65px;
+            right: 5px;
+            line-height: 19px;
+            cursor: pointer;
+        }
+
+        .typebtn:hover {
+            /* background-color: rgb(150, 150, 150); */
+            border: 2px rgb(150, 150, 150) solid;
+        }
+
+        .typebtn:active {
+            border: 2.5px solid rgb(140, 140, 255);
+        }
+
+        .typebtn:focus,
+        .typebtn:focus-visible,
+        .keys,
+        .keys1 {
+            outline: none;
+        }
+
+        .typewindow {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1040px;
+            height: 90px;
+            top: 100px;
+            background-color: rgb(240, 240, 240);
+            border: solid rgb(200, 200, 200);
+            border-width: 2px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .scorelist {
+            width: 200px;
+            /* background-color: #a9a9ff; */
+            margin: 0 40px;
+            position: relative;
+            line-height: 40px;
+        }
+
+        .scorevalue {
+            right: 0px;
+            bottom: 0px;
+            height: 60px;
+            width: 200px;
+            /* background-color: #d3d3d3; */
+            position: absolute;
+            font-size: 50px;
+            text-align: right;
+            line-height: 60px;
+        }
+
         #typetextbox {
             position: absolute;
             display: flex;
             overflow: hidden;
-            line-height: 40px;
-            width: 950px;
+            border-radius: 5px;
+            line-height: 80px;
+            width: 956.7px;
             height: 80px;
             background-color: #ffffff;
             left: 5px;
             top: 5px;
+            clip-path: inset(0 0 0 0px);
         }
 
         #cover {
             content: "";
             position: fixed;
-            height: 80px;
-            left: 0px;
-            width: 5px;
-            background-color: #ffffff;
+            pointer-events: none;
+            height: 25px;
+            left: 5px;
+            top: 30px;
+            width: 11px;
+            background-color: #0400ff;
+            opacity: 0.0;
+            /* display: none; */
+            transition-duration: 0.1s;
         }
 
         .text {
@@ -643,22 +713,33 @@
         </div>
         <div class="nkrotextbox"></div>
         <!-- 測試 -->
-        <button class="btn" style="right: -10%; top: 10%; position: absolute;width: 30px;height: 120px;" onclick="for(let i =0;i<3;i++){for(let j of nkrotable[i]){j.value =1}};
+        <!-- <button class="btn" style="right: -10%; top: 10%; position: absolute;width: 30px;height: 120px;" onclick="for(let i =0;i<3;i++){for(let j of nkrotable[i]){j.value =1}};
             console.log('testmode');">
             通<br>過<br>測<br>試
-        </button>
+        </button> -->
     </div>
 
     <!-- type -->
-    <div style=" position: fixed; left: 50%; transform: translateX(-50%); width: 1040px; height: 90px; top : 100px;background-color: rgb(240, 240, 240);
-            border: solid rgb(200, 200, 200);
-            border-width: 2px; border-radius: 5px;">
+    <div id="typewindow" class="typewindow">
         <div id="typetextbox">
+            <!-- 閃爍藍框 -->
             <div id="cover"></div>
         </div>
-        <button id="typestart" style="position: absolute;height: 30px; width: 60px; right: 5px; top: 5px;">開始</button>
-
-        <button style="position: absolute;height: 30px; width: 60px; right: 5px; top: 45px;">重製</button>
+        <button id="typestart" class="typebtn" style="top: 5px;">
+            開始
+        </button>
+        <button id="typerestart" class="typebtn" style="bottom: 5px;">
+            重製
+        </button>
+    </div>
+    <div id="score" class="typewindow"
+        style="top: 550px; display: flex; justify-content: center; opacity: 0; pointer-events: none;">
+        <div class="scorelist">Right：<div id="right" class="scorevalue">0</div>
+        </div>
+        <div class="scorelist">Wrong：<div id="wrong" class="scorevalue">0</div>
+        </div>
+        <div class="scorelist">Character/Sec:<div id="character" class="scorevalue">0</div>
+        </div>
     </div>
 
     <canvas id="myCanvas"></canvas>
@@ -770,8 +851,9 @@
         let nkrostate = 0;
         let nkrostep = 0;
         let steppluscount = 0;
-        let overtimeid = undefined;
         let timeoutID = undefined;
+        let overtimeid = undefined;
+        let overtimeidlist = [];
         let nkrotestkdEL = function () {
             return function (e) {
                 e.preventDefault();
@@ -806,7 +888,6 @@
                     // 完成進入下階段
                     if (timeoutID == undefined) {
                         timeoutID = setTimeout(function () {
-                            console.log('step' + nkrostep + '通過');
                             $('#nkrocheckbox' + nkrostep).addClass('active2');
                             nkrostep++;
                             for (let id of overtimeidlist) {
@@ -827,7 +908,6 @@
                     }
                     // keyup取消打勾動畫
                     addEventListener("keyup", function (e) {
-                        console.log('取消打勾');
                         let nkrokeyid = 'nkro' + e.code;
                         if (checkid(nkrokeyid)) {
                             $('#nkrocheckbox' + nkrostep).removeClass('active');
@@ -974,6 +1054,7 @@
         // 開啟介面
         $('.typeopen').on('click', function () {
             $('#typewindow').css('display', 'block');
+            $('#score').css('opacity', '1').css('pointer-events', 'auto');
         })
 
         // 文字載入
@@ -1001,10 +1082,45 @@
         }
 
         // 開始按鈕
+        let typestate = 0;
         $('#typestart').on('click', function () {
-            poemload();
-            addEventListener('keyup', typing);
+            if (!typestate) {
+                poemload();
+                addEventListener('keyup', typing);
+                typestate = 1;
+                flash()
+            }
+            $('#cover').css('opacity', '0.5');
         })
+        // 重製按鈕
+        $('#typerestart').on('click', function () {
+            typerestart();
+            $('#typetextbox').css('width', '956.7px').css('left', '5px').css('clip-path', 'inset(0 0 0 0px)');
+        })
+        function typerestart() {
+            boxclippath = 0;
+            right = 0;
+            wrong = 0;
+            score = 0;
+            timestart = undefined;
+            poemwordarrayindex = 0;
+            wordindex = 0;
+            typestate = 0;
+            removeEventListener('keyup', typing);
+            $('#right').text(right);
+            $('#wrong').text(wrong);
+            $('#character').text(score);
+        }
+        // 閃爍
+        function flash() {
+            setTimeout(() => {
+                $('#cover').css('opacity', '0.5');
+                setTimeout(() => {
+                    $('#cover').css('opacity', '0');
+                    flash();
+                }, 500);
+            }, 500);
+        }
 
         // 偵測輸入
         let keylist = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', ',', ';', '.'];
@@ -1015,12 +1131,18 @@
         ctx.font = "20px monospace";
         let textwidth = ctx.measureText('a').width;
 
+        let boxclippath = 0;
+        let right = 0;
+        let wrong = 0;
+        let score = 0;
+        let timestart = undefined;
         function typing(e) {
+            if (timestart == undefined) {
+                timestart = Date.now();
+                console.log(timestart)
+            }
             if (keylist.find((k) => (e.key == k))) {
-                console.log(poemwordarray[poemwordarrayindex][wordindex]);
                 if (e.key == poemwordarray[poemwordarrayindex][wordindex]) {
-                    console.log('poemwordarrayindex:' + poemwordarrayindex)
-                    console.log('wordindex:' + wordindex)
                     if (wordindex < (poemwordarray[poemwordarrayindex].length - 1)) {
                         wordindex++;
                         console.log('wordindex++')
@@ -1028,20 +1150,24 @@
                     else {
                         wordindex = 0;
                         poemwordarrayindex++;
-                        console.log('poemwordarrayindex++')
                     }
                     let boxwidth = $('#typetextbox').css('width');
-                    let boxwidth2 = $('#cover').css('width');
                     let boxleft = $('#typetextbox').css('left');
-                    let boxleft2 = $('#cover').css('left');
-                    $('#typetextbox').css('width', (parseFloat(boxwidth) + textwidth) + 'px').css('left', (parseFloat(boxleft) - textwidth) + 'px');
-                    $('#cover').css('width', (parseFloat(boxwidth2) + textwidth) + 'px').css('left', (parseFloat(boxleft2) - textwidth) + 'px');
-                    console.log('boxwidth2:' + boxwidth2)
+                    boxclippath += textwidth;
+                    $('#typetextbox').css('width', (parseFloat(boxwidth) + textwidth) + 'px').css('left', (parseFloat(boxleft) - textwidth) + 'px')
+                        .css('clip-path', 'inset(0 0 0 ' + boxclippath + 'px)');
+                    right++;
+                    $('#right').text(right);
                 }
                 else {
-                    // finish;
+                    wrong++;
+                    $('#wrong').text(wrong);
                 }
             }
+            let timenow = Date.now();
+            score = (right / ((timenow - timestart) / 1000)).toFixed(2);
+
+            $('#character').text(score);
         }
 
 
